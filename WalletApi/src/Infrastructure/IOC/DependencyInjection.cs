@@ -16,6 +16,7 @@ public static class DependencyInjection
         services.AddScoped<IWalletService, WalletService>();
         services.AddTransient<IEmailSender<AppUser>, EmailSenderService>();
         services.AddScoped<ITransferService, TransferService>();
+        services.AddScoped<IUserService, UserService>();
 
         // Repository
         services.AddScoped<IUserRepository, UserRepository>();

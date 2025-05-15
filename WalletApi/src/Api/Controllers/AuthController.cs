@@ -8,14 +8,6 @@ namespace WalletApi.Api.Controllers;
 [ApiController]
 public class AuthController(IAuthService authService) : ControllerBase
 {
-    
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterModel model)
-    {
-        var result = await authService.Register(model);
-        
-        return !result.Succeeded ? BadRequest(result.Errors) : Ok(new { message = "Usuário Registrado com sucesso!" });
-    }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)

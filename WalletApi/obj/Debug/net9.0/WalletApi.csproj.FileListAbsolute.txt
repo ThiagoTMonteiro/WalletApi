@@ -234,3 +234,4 @@
 /Users/thiago/Documents/fontes/WalletApi/WalletApi/bin/Debug/net9.0/MockQueryable.Core.dll
 /Users/thiago/Documents/fontes/WalletApi/WalletApi/bin/Debug/net9.0/MockQueryable.EntityFrameworkCore.dll
 /Users/thiago/Documents/fontes/WalletApi/WalletApi/bin/Debug/net9.0/MockQueryable.Moq.dll
+/Users/thiago/Documents/fontes/WalletApi/WalletApi/obj/Debug/net9.0/WalletApi.sourcelink.json

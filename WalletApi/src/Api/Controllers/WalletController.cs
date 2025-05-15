@@ -7,7 +7,7 @@ using WalletApi.Application.Interfaces.Services;
 
 namespace WalletApi.Api.Controllers;
 
-[Route("v1/api/wallets")]
+[Route("v1/api/wallet")]
 [Authorize]
 public class WalletController(IWalletService walletService) : ControllerBase
 {
@@ -21,7 +21,7 @@ public class WalletController(IWalletService walletService) : ControllerBase
         return result == null ? NotFound() : Ok(result);
     }
     
-    [HttpPost]
+    [HttpPost("deposit")]
     public async Task<IActionResult> AddBalance([FromBody] WalletModel model)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

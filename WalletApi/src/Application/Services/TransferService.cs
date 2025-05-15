@@ -12,10 +12,10 @@ namespace WalletApi.Application.Services;
 public class TransferService(IUserRepository userRepository, ITransferRepository transferRepository, IMapper mapper) 
     : ITransferService
 {
-    public async Task<TransferResponse> Transfer(TransferModel model, string fromUserId)
+    public async Task<TransferResponse> Transfer(TransferModel model, string senderUserId)
     {
-        var fromUser = await userRepository.GetByIdAsync(fromUserId);
-        var toUser = await userRepository.GetByIdAsync(model.ToUserId);
+        var fromUser = await userRepository.GetByIdAsync(senderUserId);
+        var toUser = await userRepository.GetByIdAsync(model.ReceiverUserId);
 
         if (fromUser == null || toUser == null) return new TransferResponse();
 
@@ -27,8 +27,8 @@ public class TransferService(IUserRepository userRepository, ITransferRepository
 
         var transfer = new Transfer
         {
-            FromUserId = fromUserId,
-            ToUserId = model.ToUserId,
+            SenderUserId = senderUserId,
+            ReceiverUserId = model.ReceiverUserId,
             Amount = model.Amount,
             TransferDate = DateTime.UtcNow
         };
@@ -44,7 +44,7 @@ public class TransferService(IUserRepository userRepository, ITransferRepository
         var transfers = await transferRepository
             .AsQueryable()
             .Where(t =>
-                (t.FromUserId == userId || t.ToUserId == userId) &&
+                (t.SenderUserId == userId || t.ReceiverUserId == userId) &&
                 (!startDate.HasValue || t.TransferDate >= startDate.Value) &&
                 (!endDate.HasValue || t.TransferDate <= endDate.Value))
             .ToListAsync();

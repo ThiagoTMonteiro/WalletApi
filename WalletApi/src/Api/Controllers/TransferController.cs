@@ -7,7 +7,7 @@ using WalletApi.Application.Interfaces.Services;
 namespace WalletApi.Api.Controllers;
 
 
-[Route("v1/api/transfers")]
+[Route("v1/api/transfer")]
 [Authorize]
 public class TransferController(ITransferService transferService) : ControllerBase
 {

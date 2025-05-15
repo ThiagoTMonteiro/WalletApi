@@ -35,14 +35,14 @@ public class TransferServiceTests
         const string toUserId = "user2";
         const decimal amount = 50m;
 
-        var fromUser = new AppUser { Id = fromUserId, WalletBalance = 100m };
-        var toUser = new AppUser { Id = toUserId, WalletBalance = 20m };
+        var senderUser = new AppUser { Id = fromUserId, WalletBalance = 100m };
+        var receiverUser = new AppUser { Id = toUserId, WalletBalance = 20m };
 
-        var model = new TransferModel { ToUserId = toUserId, Amount = amount };
+        var model = new TransferModel { ReceiverUserId = toUserId, Amount = amount };
         var expectedResponse = new TransferResponse { Amount = amount };
 
-        _userRepositoryMock.Setup(r => r.GetByIdAsync(fromUserId)).ReturnsAsync(fromUser);
-        _userRepositoryMock.Setup(r => r.GetByIdAsync(toUserId)).ReturnsAsync(toUser);
+        _userRepositoryMock.Setup(r => r.GetByIdAsync(fromUserId)).ReturnsAsync(senderUser);
+        _userRepositoryMock.Setup(r => r.GetByIdAsync(toUserId)).ReturnsAsync(receiverUser);
 
         _transferRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Transfer>())).Returns(Task.CompletedTask);
         _transferRepositoryMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
@@ -54,8 +54,8 @@ public class TransferServiceTests
 
         // Assert
         Assert.Equal(amount, result.Amount);
-        Assert.Equal(70m, toUser.WalletBalance);  
-        Assert.Equal(50m, fromUser.WalletBalance); 
+        Assert.Equal(70m, receiverUser.WalletBalance);  
+        Assert.Equal(50m, senderUser.WalletBalance); 
 
         _transferRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Transfer>()), Times.Once);
         _transferRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
@@ -67,7 +67,7 @@ public class TransferServiceTests
         // Arrange
         _userRepositoryMock.Setup(r => r.GetByIdAsync("user1")).ReturnsAsync((AppUser)null);
 
-        var model = new TransferModel { ToUserId = "user2", Amount = 10m };
+        var model = new TransferModel { ReceiverUserId = "user2", Amount = 10m };
 
         // Act
         var result = await _service.Transfer(model, "user1");
@@ -82,13 +82,13 @@ public class TransferServiceTests
     public async Task Transfer_ShouldThrowException_WhenInsufficientBalance()
     {
         // Arrange
-        var fromUser = new AppUser { Id = "user1", WalletBalance = 5m };
-        var toUser = new AppUser { Id = "user2", WalletBalance = 0m };
+        var senderUser = new AppUser { Id = "user1", WalletBalance = 5m };
+        var receiverUser = new AppUser { Id = "user2", WalletBalance = 0m };
 
-        _userRepositoryMock.Setup(r => r.GetByIdAsync("user1")).ReturnsAsync(fromUser);
-        _userRepositoryMock.Setup(r => r.GetByIdAsync("user2")).ReturnsAsync(toUser);
+        _userRepositoryMock.Setup(r => r.GetByIdAsync("user1")).ReturnsAsync(senderUser);
+        _userRepositoryMock.Setup(r => r.GetByIdAsync("user2")).ReturnsAsync(receiverUser);
 
-        var model = new TransferModel { ToUserId = "user2", Amount = 10m };
+        var model = new TransferModel { ReceiverUserId = "user2", Amount = 10m };
 
         // Act & Assert
         await Assert.ThrowsAsync<Exception>(() => _service.Transfer(model, "user1"));
@@ -107,8 +107,8 @@ public class TransferServiceTests
 
         var transfers = new List<Transfer>
         {
-            new Transfer { FromUserId = "user123", ToUserId = "user456", TransferDate = new DateTime(2025, 6, 1) },
-            new Transfer { FromUserId = "user789", ToUserId = "user123", TransferDate = new DateTime(2025, 7, 1) }
+            new Transfer { SenderUserId = "user123", ReceiverUserId = "user456", TransferDate = new DateTime(2025, 6, 1) },
+            new Transfer { SenderUserId = "user789", ReceiverUserId = "user123", TransferDate = new DateTime(2025, 7, 1) }
         };
 
         var mockQueryable = transfers.AsQueryable().BuildMock();
@@ -147,8 +147,6 @@ public class TransferServiceTests
         // Assert
         Assert.Empty(result);
     }
-
-    
     
     [Fact]
     public async Task GetTransfers_ShouldReturnFilteredTransfers_WhenDateRangeIsSpecified()
@@ -160,9 +158,9 @@ public class TransferServiceTests
 
         var transfers = new List<Transfer>
         {
-            new Transfer { FromUserId = "user123", ToUserId = "user456", TransferDate = new DateTime(2025, 6, 1) },
-            new Transfer { FromUserId = "user789", ToUserId = "user123", TransferDate = new DateTime(2025, 7, 1) },
-            new Transfer { FromUserId = "user123", ToUserId = "user456", TransferDate = new DateTime(2025, 1, 1) }  // This one is outside the date range
+            new Transfer { SenderUserId = "user123", ReceiverUserId = "user456", TransferDate = new DateTime(2025, 6, 1) },
+            new Transfer { SenderUserId = "user789", ReceiverUserId = "user123", TransferDate = new DateTime(2025, 7, 1) },
+            new Transfer { SenderUserId = "user123", ReceiverUserId = "user456", TransferDate = new DateTime(2025, 1, 1) }  // This one is outside the date range
         };
 
         var mockQueryable = transfers.AsQueryable().BuildMock();

@@ -18,11 +18,6 @@ public class AuthService(
     IMapper mapper)
     : IAuthService
 {
-    public async Task<IdentityResult> Register(RegisterModel model)
-    {
-        var user = mapper.Map<AppUser>(model);
-        return await userManager.CreateAsync(user, model.Password);
-    }
     
     public async Task<AuthResponse> Login(LoginModel model)
     {
