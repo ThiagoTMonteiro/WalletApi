@@ -5,6 +5,7 @@ using WalletApi.Application.Interfaces.Services;
 namespace WalletApi.Api.Controllers;
 
 [Route("v1/api/users")]
+[ApiController]
 public class UserController(IUserService userService) : ControllerBase
 {
     [HttpPost]

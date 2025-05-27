@@ -9,6 +9,7 @@ namespace WalletApi.Api.Controllers;
 
 [Route("v1/api/wallet")]
 [Authorize]
+[ApiController]
 public class WalletController(IWalletService walletService) : ControllerBase
 {
     

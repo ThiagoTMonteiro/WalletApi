@@ -22,6 +22,7 @@
         <PackageReference Include="Moq" Version="4.20.72" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
         <PackageReference Include="Redoc.AspNetCore" Version="1.0.0" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.4.3" />
         <PackageReference Include="xunit" Version="2.9.3" />
     </ItemGroup>
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
 using WalletApi.Application.Mappings;
 using WalletApi.Domain.Entities;
 using WalletApi.Infrastructure.Data;
@@ -57,10 +58,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddLogging(builder =>
+builder.Services.AddLogging(loggingBuilder =>
 {
-    builder.AddConsole();
-    builder.SetMinimumLevel(LogLevel.Debug);
+    loggingBuilder.AddConsole();
+    loggingBuilder.SetMinimumLevel(LogLevel.Debug);
 });
 
 builder.Services.Configure<RouteOptions>(options => {
@@ -92,12 +93,7 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseReDoc(options =>
-    {
-        options.SpecUrl = "/openapi/v1.json";
-        options.RoutePrefix = "docs";
-        options.DocumentTitle = "Wallet API";
-    });
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
