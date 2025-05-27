@@ -64,10 +64,10 @@ http://localhost:8080
 ```
 - Via aplicação direta
 ```http
-http://localhost:5194
+http://localhost:8000
 ````
 ```https
-https://localhost:7196
+https://localhost:8001
 ```
 
 ### Login
